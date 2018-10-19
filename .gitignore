@@ -1,0 +1,4 @@
+[Bbuild]
+/externals/
+.DS_Store
+/tmp/
