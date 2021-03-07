@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-include(CMakePackageConfigHelpers)
-
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED TRUE)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-
 set(CMAKE_BUILD_TYPE_INIT "Release")
 
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
@@ -17,7 +10,15 @@ endif()
 
 project(tree-sitter-cmake)
 
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
 option(TREESITTER_INSTALL "Generate the install target." ${SUBPROJECT})
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/externals/tree-sitter")
   find_package(Git QUIET REQUIRED)
@@ -95,7 +96,9 @@ target_include_directories(Tree-Sitter
     $<INSTALL_INTERFACE:include>
 )
 
-foreach(lang C CPP HTML JavaScript JSON Rust)
+set(langs C CPP HTML JavaScript JSON Rust)
+
+foreach(lang IN LISTS langs)
   string(TOLOWER "${lang}" lang_str)
   add_library(Tree-Sitter-${lang} externals/tree-sitter-${lang_str}/src/parser.c)
   target_link_libraries(Tree-Sitter-${lang} INTERFACE Tree-Sitter)
@@ -105,20 +108,16 @@ foreach(lang C CPP HTML JavaScript JSON Rust)
     $<INSTALL_INTERFACE:include>
   )
   add_dependencies(Tree-Sitter-${lang} Tree-Sitter)
-endforeach()
 
-# Make aliases the same as exported lib names. Useful when embedding.
-add_library(Tree-Sitter::Tree-Sitter ALIAS Tree-Sitter)
-foreach(lang C CPP HTML JavaScript JSON Rust)
   add_library(Tree-Sitter::Tree-Sitter-${lang} ALIAS Tree-Sitter-${lang})
 endforeach()
 
 if(NOT SUBPROJECT AND NOT TREESITTER_INSTALL)
   # Only install when built as top-level project.
   if(WIN32)
-    set(CMAKE_INSTALL_DIR "CMake")
+    set(CMAKE_INSTALL_CMAKEDIR "CMake")
   else()
-    set(CMAKE_INSTALL_DIR "lib/cmake/Tree-Sitter")
+    set(CMAKE_INSTALL_CMAKEDIR "lib/cmake/Tree-Sitter")
   endif()
 
   install(FILES
@@ -129,22 +128,35 @@ if(NOT SUBPROJECT AND NOT TREESITTER_INSTALL)
     DESTINATION include/tree_sitter
   )
   
-  install(TARGETS Tree-Sitter EXPORT Tree-Sitter DESTINATION lib)
-  
+  install(TARGETS Tree-Sitter EXPORT Tree-Sitter
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+
   install(EXPORT Tree-Sitter
-    DESTINATION ${CMAKE_INSTALL_DIR}
+    DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
     NAMESPACE Tree-Sitter::
     FILE Tree-Sitter-targets.cmake
   )
   
-  foreach(lang C CPP HTML JavaScript JSON Rust)
+  export(TARGETS Tree-Sitter
+    NAMESPACE Tree-Sitter::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/Tree-Sitter-depends.cmake"
+  )
+  
+  foreach(lang IN LISTS langs)
     install(TARGETS Tree-Sitter-${lang} EXPORT ${lang} DESTINATION lib)
     install(EXPORT ${lang}
-      DESTINATION ${CMAKE_INSTALL_DIR}
+      DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
       NAMESPACE Tree-Sitter::
       FILE Tree-Sitter-${lang}-targets.cmake
     )
+    export(TARGETS Tree-Sitter-${lang}
+      NAMESPACE Tree-Sitter::
+      FILE "${CMAKE_CURRENT_BINARY_DIR}/Tree-Sitter-${lang}-depends.cmake"
+    )
   endforeach()
   
-  install(FILES tree-sitter-config.cmake DESTINATION ${CMAKE_INSTALL_DIR})
+  install(FILES tree-sitter-config.cmake DESTINATION ${CMAKE_INSTALL_CMAKEDIR})
 endif()
