@@ -9,11 +9,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 set(CMAKE_BUILD_TYPE_INIT "Release")
 
-if(NOT DEFINED PROJECT_NAME)
-  set(SUBPROJECT TRUE)
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(SUBPROJECT OFF)
+else()
+  set(SUBPROJECT ON)
 endif()
 
 project(tree-sitter-cmake)
+
+option(TREESITTER_INSTALL "Generate the install target." ${SUBPROJECT})
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/externals/tree-sitter")
   find_package(Git QUIET REQUIRED)
@@ -109,7 +113,7 @@ foreach(lang C CPP HTML JavaScript JSON Rust)
   add_library(Tree-Sitter::Tree-Sitter-${lang} ALIAS Tree-Sitter-${lang})
 endforeach()
 
-if(NOT SUBPROJECT)
+if(NOT SUBPROJECT AND NOT TREESITTER_INSTALL)
   # Only install when built as top-level project.
   if(WIN32)
     set(CMAKE_INSTALL_DIR "CMake")

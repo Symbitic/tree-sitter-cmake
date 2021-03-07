@@ -5,7 +5,7 @@ CMake project for building [Tree-sitter](http://tree-sitter.github.io/tree-sitte
 ## About
 
 Tree-sitter is an excellent project. It provides a reusable interface for parsing many different programming languages.
-But because it's aimed primarily for consumption in Node.js, it uses GYP as the build system.
+But because it's aimed primarily for Node.js and Rust, it uses GYP as the build system.
 GYP is terrible for modern-day developers needs.
 
 This project aims to provide an integrated way to use Tree-sitter in CMake projects.
@@ -70,7 +70,7 @@ const TSLanguage *tree_sitter_rust();
 ## License
 
 This is nothing more than a simple CMake script and some supporting files.
-It released as Public Domain.
+It is released as Public Domain.
 
 This is not endorsed by the Tree-sitter developers. If they contact me and ask
 me to remove this I will.
