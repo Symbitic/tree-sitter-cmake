@@ -11,6 +11,8 @@ set(CMAKE_BUILD_TYPE_INIT "Release")
 
 if(NOT DEFINED PROJECT_NAME)
   set(SUBPROJECT TRUE)
+else()
+  set(SUBPROJECT FALSE)
 endif()
 
 project(tree-sitter-cmake)
@@ -91,7 +93,7 @@ target_include_directories(Tree-Sitter
     $<INSTALL_INTERFACE:include>
 )
 
-foreach(lang C CPP HTML JavaScript JSON Rust)
+foreach(lang C CPP C-Sharp Go Java JavaScript Python Rust TypeScript)
   string(TOLOWER "${lang}" lang_str)
   add_library(Tree-Sitter-${lang} externals/tree-sitter-${lang_str}/src/parser.c)
   target_link_libraries(Tree-Sitter-${lang} INTERFACE Tree-Sitter)
@@ -105,7 +107,7 @@ endforeach()
 
 # Make aliases the same as exported lib names. Useful when embedding.
 add_library(Tree-Sitter::Tree-Sitter ALIAS Tree-Sitter)
-foreach(lang C CPP HTML JavaScript JSON Rust)
+foreach(lang C CPP C-Sharp Go Java JavaScript Python Rust TypeScript)
   add_library(Tree-Sitter::Tree-Sitter-${lang} ALIAS Tree-Sitter-${lang})
 endforeach()
 
