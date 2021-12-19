@@ -48,10 +48,13 @@ The complete list of targets is:
 * `Tree-Sitter::Tree-Sitter`
 * `Tree-Sitter::Tree-Sitter-C`
 * `Tree-Sitter::Tree-Sitter-CPP`
-* `Tree-Sitter::Tree-Sitter-HTML`
+* `Tree-Sitter::Tree-Sitter-C-Sharp`
+* `Tree-Sitter::Tree-Sitter-Go`
+* `Tree-Sitter::Tree-Sitter-Java`
 * `Tree-Sitter::Tree-Sitter-JavaScript`
-* `Tree-Sitter::Tree-Sitter-JSON`
+* `Tree-Sitter::Tree-Sitter-Python`
 * `Tree-Sitter::Tree-Sitter-Rust`
+* `Tree-Sitter::Tree-Sitter-TypeScript`
 
 I will probably add more language parsers later.
 
@@ -61,16 +64,19 @@ definitions for all the language parsers included.
 ```c
 const TSLanguage *tree_sitter_c();
 const TSLanguage *tree_sitter_cpp();
-const TSLanguage *tree_sitter_html();
+const TSLanguage *tree_sitter_c_sharp();
+const TSLanguage *tree_sitter_go();
+const TSLanguage *tree_sitter_java();
 const TSLanguage *tree_sitter_javascript();
-const TSLanguage *tree_sitter_json();
+const TSLanguage *tree_sitter_python();
 const TSLanguage *tree_sitter_rust();
+const TSLanguage *tree_sitter_typescript();
 ```
 
 ## License
 
 This is nothing more than a simple CMake script and some supporting files.
-It released as Public Domain.
+It is released as Public Domain.
 
 This is not endorsed by the Tree-sitter developers. If they contact me and ask
 me to remove this I will.
