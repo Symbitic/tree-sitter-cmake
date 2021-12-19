@@ -85,8 +85,6 @@ target_include_directories(Tree-Sitter
 
 add_library(Tree-Sitter::Tree-Sitter ALIAS Tree-Sitter)
 
-message("SUBPROJECT=${SUBPROJECT}")
-
 if(NOT SUBPROJECT)
   # Only install when built as top-level project.
   if(WIN32)
