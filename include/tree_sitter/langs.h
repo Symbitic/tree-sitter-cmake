@@ -1,10 +1,12 @@
 #ifndef TREE_SITTER_LANGS_H_
 #define TREE_SITTER_LANGS_H_
 
-#include "tree_sitter/runtime.h"
-
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifndef TREE_SITTER_API_H_
+typedef struct TSLanguage TSLanguage;
 #endif
 
 const TSLanguage *tree_sitter_c();
@@ -16,6 +18,7 @@ const TSLanguage *tree_sitter_javascript();
 const TSLanguage *tree_sitter_python();
 const TSLanguage *tree_sitter_rust();
 const TSLanguage *tree_sitter_typescript();
+const TSLanguage *tree_sitter_tsx();
 
 #ifdef __cplusplus
 }

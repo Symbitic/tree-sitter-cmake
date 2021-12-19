@@ -19,15 +19,14 @@ jobs:
           - ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Install CMake
+      - name: Install
         uses: symbitic/install-cmake@master
 
       - name: Configure
-        run: cmake --config Debug -S . -B build -G Ninja
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug .
 
       - name: Build
-        run: cmake --build build --config Debug -j 4
+        run: cmake --build build -j 4
